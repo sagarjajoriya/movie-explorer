@@ -1,35 +1,44 @@
-## Description
+# Movie Explorer — Backend
 
-Movie explorer backend
+NestJS API for the Movie Explorer app. Part of a pnpm workspace; see the root `package.json`.
 
-## Project setup
+Runs on http://localhost:3000 by default.
+
+## Prerequisites
+
+- Node version from the root `.nvmrc`
+- pnpm (version pinned in the root `package.json` → `packageManager`)
+
+## Setup
+
+Install from the **repository root**, not from this folder. A workspace has a single
+`node_modules` layout and a single `pnpm-lock.yaml` at the root.
 
 ```bash
-$ pnpm install
+pnpm install
 ```
 
-## Compile and run the project
+## Run
+
+From the repository root:
 
 ```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+# watch mode (development)
+pnpm dev:backend
 ```
 
-## Run tests
+Or run any backend script from the root with a filter:
 
 ```bash
-# unit tests
-$ pnpm run test
+pnpm --filter backend start        # run once
+pnpm --filter backend build        # compile to dist/
+pnpm --filter backend start:prod   # run the compiled build
+```
 
-# e2e tests
-$ pnpm run test:e2e
+## Test
 
-# test coverage
-$ pnpm run test:cov
+```bash
+pnpm --filter backend test         # unit tests
+pnpm --filter backend test:e2e     # end-to-end tests
+pnpm --filter backend test:cov     # coverage report
 ```
