@@ -7,15 +7,16 @@ import {
   Query,
 } from '@nestjs/common';
 import { MoviesService } from './movies.service';
-import type { Movie, PaginatedMovies } from './movie.interface';
 import { ListMoviesQueryDto } from './dto/list-movies-query.dto';
+import type { Movie } from './movie.interface';
+import type { Paginated } from '../common/interfaces/paginated.interface';
 
 @Controller('movies')
 export class MoviesController {
   constructor(private readonly moviesService: MoviesService) {}
 
   @Get()
-  findAll(@Query() query: ListMoviesQueryDto): PaginatedMovies {
+  findAll(@Query() query: ListMoviesQueryDto): Paginated<Movie> {
     return this.moviesService.findAll(query);
   }
 

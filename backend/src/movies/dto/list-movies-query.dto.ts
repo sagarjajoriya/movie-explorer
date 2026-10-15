@@ -6,16 +6,27 @@ import {
   Min,
   IsIn,
   IsNumber,
+  MaxLength,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Type, Transform } from 'class-transformer';
+import type { SortField, SortOrder } from '../movie.interface';
 
 export class ListMoviesQueryDto {
   @IsOptional()
   @IsString()
+  @MaxLength(100)
+  @Transform(({ value }: { value: string }) => {
+    if (typeof value === 'string') return value.trim();
+    return value;
+  })
   search?: string;
 
   @IsOptional()
   @IsString()
+  @Transform(({ value }: { value: string }) => {
+    if (typeof value === 'string') return value.trim();
+    return value;
+  })
   genre?: string;
 
   @IsOptional()
@@ -27,18 +38,17 @@ export class ListMoviesQueryDto {
 
   @IsOptional()
   @IsInt()
+  @Min(1888)
   @Type(() => Number)
   year?: number;
 
   @IsOptional()
-  @IsString()
   @IsIn(['title', 'year', 'rating'])
-  sortBy?: string;
+  sortBy: SortField = 'title';
 
   @IsOptional()
-  @IsString()
   @IsIn(['asc', 'desc'])
-  order: string = 'asc';
+  order: SortOrder = 'asc';
 
   @IsOptional()
   @IsInt()

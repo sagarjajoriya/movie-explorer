@@ -1,42 +1,45 @@
 import { Injectable } from '@nestjs/common';
-import { Movie, PaginatedMovies } from './movie.interface';
+import { Movie, SortField, FindMovieOptions } from './movie.interface';
+import { Paginated } from 'src/common/interfaces/paginated.interface';
 import { MOVIES_LIST } from './movies.data';
-import { ListMoviesQueryDto } from './dto/list-movies-query.dto';
-import { filter } from 'rxjs';
 
 @Injectable()
 export class MoviesService {
   private readonly movies: readonly Movie[] = MOVIES_LIST;
 
-  findAll(query: ListMoviesQueryDto): PaginatedMovies {
+  findAll(query: FindMovieOptions): Paginated<Movie> {
     const { search, genre, minRating, year, sortBy, order, page, limit } =
       query;
 
-    const filteredMovies = this.movies.filter((m: Movie) => {
-      const searchSet: boolean[] = [];
-      if (search) {
-        searchSet.push(
-          m.title.toLowerCase().includes(search.trim().toLowerCase()),
-        );
+    const searchLowercase = search?.toLowerCase();
+    const genreLowercase = genre?.toLowerCase();
+    const filteredMovies = this.movies.filter((m) => {
+      if (searchLowercase && !m.title.toLowerCase().includes(searchLowercase)) {
+        return false;
       }
-      if (genre) {
-        searchSet.push(m.genres.includes(genre));
+      if (
+        genreLowercase &&
+        !m.genres.some((g) => g.toLowerCase() === genreLowercase)
+      ) {
+        return false;
       }
-      if (minRating) {
-        searchSet.push(m.rating >= minRating);
+      if (minRating !== undefined && m.rating < minRating) {
+        return false;
       }
-      if (year) {
-        searchSet.push(m.year === year);
+      if (year !== undefined && m.year !== year) {
+        return false;
       }
 
-      return searchSet.every((s) => !!s);
+      return true;
     });
 
-    if (sortBy) {
-      filteredMovies.sort((a, b) =>
-        order === 'asc' ? a[sortBy] - b[sortBy] : b[sortBy] - a[sortBy],
-      );
-    }
+    const comparators: Record<SortField, (a: Movie, b: Movie) => number> = {
+      title: (a, b) => a.title.localeCompare(b.title),
+      year: (a, b) => a.year - b.year,
+      rating: (a, b) => a.rating - b.rating,
+    };
+    const direction = order === 'asc' ? 1 : -1;
+    filteredMovies.sort((a, b) => direction * comparators[sortBy](a, b));
 
     const paginationMeta = {
       page,
@@ -44,13 +47,11 @@ export class MoviesService {
       total: filteredMovies.length,
       totalPages: Math.ceil(filteredMovies.length / limit),
     };
-    const paginatedData = filteredMovies.slice(
-      page * limit - limit,
-      page * limit,
-    );
+
+    const offset = (page - 1) * limit;
 
     return {
-      data: paginatedData,
+      data: filteredMovies.slice(offset, offset + limit),
       meta: paginationMeta,
     };
   }

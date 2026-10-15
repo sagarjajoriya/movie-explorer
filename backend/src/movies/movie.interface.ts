@@ -7,14 +7,16 @@ export interface Movie {
   readonly overview: string;
 }
 
-export interface PaginationMeta {
+export type SortField = 'title' | 'year' | 'rating';
+export type SortOrder = 'asc' | 'desc';
+
+export interface FindMovieOptions {
+  search?: string;
+  genre?: string;
+  minRating?: number;
+  year?: number;
+  sortBy: SortField;
+  order: SortOrder;
   page: number;
   limit: number;
-  total: number;
-  totalPages: number;
-}
-
-export interface PaginatedMovies {
-  data: readonly Movie[];
-  meta: PaginationMeta;
 }
