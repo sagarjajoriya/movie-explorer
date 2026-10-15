@@ -6,3 +6,15 @@ export interface Movie {
   readonly rating: number;
   readonly overview: string;
 }
+
+export interface PaginationMeta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+
+export interface PaginatedMovies {
+  data: readonly Movie[];
+  meta: PaginationMeta;
+}

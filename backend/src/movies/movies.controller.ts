@@ -4,17 +4,19 @@ import {
   NotFoundException,
   Param,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { MoviesService } from './movies.service';
-import type { Movie } from './movie.interface';
+import type { Movie, PaginatedMovies } from './movie.interface';
+import { ListMoviesQueryDto } from './dto/list-movies-query.dto';
 
 @Controller('movies')
 export class MoviesController {
   constructor(private readonly moviesService: MoviesService) {}
 
   @Get()
-  findAll(): readonly Movie[] {
-    return this.moviesService.findAll();
+  findAll(@Query() query: ListMoviesQueryDto): PaginatedMovies {
+    return this.moviesService.findAll(query);
   }
 
   @Get(':id')
