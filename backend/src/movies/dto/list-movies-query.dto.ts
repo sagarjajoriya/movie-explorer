@@ -8,25 +8,20 @@ import {
   IsNumber,
   MaxLength,
 } from 'class-validator';
-import { Type, Transform } from 'class-transformer';
+import { Type } from 'class-transformer';
 import type { SortField, SortOrder } from '../movie.interface';
+import { Trim } from '../../common/decorators/trim.decorator';
 
 export class ListMoviesQueryDto {
   @IsOptional()
   @IsString()
   @MaxLength(100)
-  @Transform(({ value }: { value: string }) => {
-    if (typeof value === 'string') return value.trim();
-    return value;
-  })
+  @Trim()
   search?: string;
 
   @IsOptional()
   @IsString()
-  @Transform(({ value }: { value: string }) => {
-    if (typeof value === 'string') return value.trim();
-    return value;
-  })
+  @Trim()
   genre?: string;
 
   @IsOptional()

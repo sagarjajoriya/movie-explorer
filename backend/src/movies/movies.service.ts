@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Movie, SortField, FindMovieOptions } from './movie.interface';
-import { Paginated } from 'src/common/interfaces/paginated.interface';
+import { Paginated } from '../common/interfaces/paginated.interface';
 import { MOVIES_LIST } from './movies.data';
 
 @Injectable()
