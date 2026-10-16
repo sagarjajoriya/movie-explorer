@@ -1,13 +1,23 @@
 node_modules
 
 dist
+dist-ssr
 
 .env
 .env.*
 !.env.example
+*.local
 
 *.log
 
+coverage/
+
+# OS
 .DS_Store
 
-coverage/
+# Editors
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea
+*.sw?

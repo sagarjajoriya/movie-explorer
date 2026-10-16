@@ -4,5 +4,5 @@ packages:
   - packages/*
 
 ignoredBuiltDependencies:
-  - "@parcel/watcher"
-  - "unrs-resolver"
+  - '@parcel/watcher'
+  - 'unrs-resolver'
