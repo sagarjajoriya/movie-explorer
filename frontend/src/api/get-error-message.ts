@@ -1,8 +1,6 @@
 import { ApiError } from './api-error';
 
 export function getErrorMessage(err: unknown): string {
-  console.error('Request failed:', err);
-
   if (err instanceof ApiError) {
     if (err.status >= 500) {
       return 'Server is not responding. Please try again later.';

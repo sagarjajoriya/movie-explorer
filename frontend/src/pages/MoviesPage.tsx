@@ -1,53 +1,27 @@
-import { useEffect, useState } from 'react';
 import { getMovies } from '../api/movies';
-import type { Movie } from '../types/movies.types';
-import type { Paginated } from '../types/pagination.types';
 import { getErrorMessage } from '../api/get-error-message';
 import MovieCard from '../components/MovieCard';
-
-type MoviesState =
-  | { status: 'loading' }
-  | { status: 'error'; message: string }
-  | { status: 'success'; result: Paginated<Movie> };
+import { useAsync } from '../hooks/useAsync';
 
 function MoviesPage() {
-  const [state, setState] = useState<MoviesState>({ status: 'loading' });
-
-  useEffect(() => {
-    const abortController = new AbortController();
-
-    async function fetchData() {
-      try {
-        setState({ status: 'loading' });
-        const result = await getMovies(abortController.signal);
-        setState({ status: 'success', result });
-      } catch (err: unknown) {
-        if (abortController.signal.aborted) return;
-
-        setState({ status: 'error', message: getErrorMessage(err) });
-      }
-    }
-    void fetchData();
-
-    return () => abortController.abort();
-  }, []);
+  const state = useAsync(getMovies, 'movies');
 
   function renderContent() {
     switch (state.status) {
       case 'loading':
         return <p>Loading...</p>;
       case 'error':
-        return <p>{state.message}</p>;
+        return <p role="alert">{getErrorMessage(state.error)}</p>;
       case 'success': {
-        const { data } = state.result;
+        const movies = state.data.data;
 
-        if (data.length === 0) {
+        if (movies.length === 0) {
           return <p>No movies found.</p>;
         }
 
         return (
           <div className="card-grid">
-            {data.map((m) => (
+            {movies.map((m) => (
               <MovieCard key={m.id} movie={m} />
             ))}
           </div>

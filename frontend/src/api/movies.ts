@@ -38,3 +38,16 @@ export async function getMovies(
 
   return response.json() as Promise<Paginated<Movie>>;
 }
+
+export async function getMovieDetail(
+  id: number,
+  signal?: AbortSignal,
+): Promise<Movie> {
+  const response = await fetch(`/api/movies/${id}`, { signal });
+
+  if (!response.ok) {
+    throw await toApiError(response);
+  }
+
+  return response.json() as Promise<Movie>;
+}
