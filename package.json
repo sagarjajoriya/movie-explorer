@@ -6,7 +6,11 @@
     "dev:backend": "pnpm --filter backend start:dev",
     "dev:frontend": "pnpm --filter frontend dev",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "lint": "pnpm -r lint",
+    "lint:fix": "pnpm -r lint:fix",
+    "build": "pnpm -r build",
+    "check": "pnpm format:check && pnpm lint && pnpm build"
   },
   "devDependencies": {
     "prettier": "3.9.10"

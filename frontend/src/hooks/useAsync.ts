@@ -36,7 +36,7 @@ export function useAsync<T>(
     void load();
 
     return () => abortController.abort();
-  }, [fetcher, key]);
+  }, [key]);
 
   return state;
 }
