@@ -5,6 +5,12 @@ export type AsyncState<T> =
   | { status: 'error'; error: unknown }
   | { status: 'success'; data: T };
 
+/**
+ * Runs `fetcher` on mount and again whenever `key` changes, aborting the previous request.
+ *
+ * `fetcher` is intentionally NOT a dependency, so callers can pass an inline arrow function.
+ * Everything that should trigger a refetch must be encoded in `key`.
+ */
 export function useAsync<T>(
   fetcher: (signal: AbortSignal) => Promise<T>,
   key: string | number,
@@ -30,7 +36,7 @@ export function useAsync<T>(
     void load();
 
     return () => abortController.abort();
-  }, [key]);
+  }, [fetcher, key]);
 
   return state;
 }
